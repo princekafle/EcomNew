@@ -1,0 +1,27 @@
+0 verbose cli C:\Program Files\nodejs\node.exe C:\Users\Dell\AppData\Roaming\npm\node_modules\npm\bin\npm-cli.js
+1 info using npm@10.8.2
+2 info using node@v20.12.2
+3 silly config load:file:C:\Users\Dell\AppData\Roaming\npm\node_modules\npm\npmrc
+4 silly config load:file:E:\Durshiskhsya\reactn\.npmrc
+5 silly config load:file:C:\Users\Dell\.npmrc
+6 silly config load:file:C:\Users\Dell\AppData\Roaming\npm\etc\npmrc
+7 verbose title npm start
+8 verbose argv "start"
+9 verbose logfile logs-max:10 dir:E:\Durshiskhsya\reactn\clean\_logs\2024-08-14T10_03_49_590Z-
+10 verbose logfile E:\Durshiskhsya\reactn\clean\_logs\2024-08-14T10_03_49_590Z-debug-0.log
+11 silly logfile start cleaning logs, removing 4 files
+12 verbose stack Error: Could not read package.json: Error: ENOENT: no such file or directory, open 'E:\Durshiskhsya\reactn\package.json'
+13 error code ENOENT
+14 error syscall open
+15 error path E:\Durshiskhsya\reactn\package.json
+16 error errno -4058
+17 error enoent Could not read package.json: Error: ENOENT: no such file or directory, open 'E:\Durshiskhsya\reactn\package.json'
+18 error enoent This is related to npm not being able to find a file.
+18 error enoent
+19 verbose cwd E:\Durshiskhsya\reactn
+20 verbose os Windows_NT 10.0.19045
+21 verbose node v20.12.2
+22 verbose npm  v10.8.2
+23 verbose exit -4058
+24 verbose code -4058
+25 error A complete log of this run can be found in: E:\Durshiskhsya\reactn\clean\_logs\2024-08-14T10_03_49_590Z-debug-0.log

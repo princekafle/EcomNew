@@ -1,30 +1,35 @@
-import React from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Import Route, not Routes
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
 import Shop from './Pages/Shop';
 import Products from './Pages/Products';
 import Cart from './Pages/Cart';
-import LoginSignup from './Pages/LoginSignup';
 import Shopcategory from './Pages/Shopcategory';
-import Productdetails from './Pages/Productdetails';
+import Layouts from './Components/Layout/Layouts';
+import men_banner from './Components/Assets/banner_mens.png'
+import women_banner from './Components/Assets/banner_women.png'
+import kid_banner from './Components/Assets/banner_kids.png'
+import Signup from './Pages/Signup';
+import Login from './Pages/Login';
+import MyProfile from './Pages/MyProfile';
+
 
 const MyRoute = () => {
   return (
-    <>
-     <Router>
-                
-                <Routes>
-                    <Route path="/" element= {<Shop/>} />
-                    <Route path="/mens" element={<Shopcategory />} />
-                    <Route path="/womens" element= {<Shopcategory />} />
-                    <Route path="/kids" element= {<Shopcategory />} />
-                    <Route path="/product" element={<Products />} />
-                    <Route path="/productdetails/:productId" element= {<Productdetails />} />
-                    <Route path="/cart" element= {<Cart />} />
-                    <Route path="/login" element= {<LoginSignup />} />
-                </Routes>
-            </Router>
-    </>
-  )
+    <Routes>
+        <Route path="/" element={<Layouts/>} >
+        <Route index element={<Shop/>} />
+        <Route path="/mens" element={<Shopcategory banner={men_banner} category="men" />} />
+        <Route path="/womens" element={<Shopcategory banner={women_banner} category="women" />} />
+        <Route path="/kids" element={<Shopcategory banner={kid_banner} category="kid" />} />
+        <Route path="/products/:productId" element={<Products />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/signup" element={<Signup/>} />
+        <Route path="/login" element={<Login/>} />
+        <Route path="/profile" element={<MyProfile/>} />
+
+        </Route>
+    </Routes>
+  );
 }
 
-export default MyRoute
+export default MyRoute;

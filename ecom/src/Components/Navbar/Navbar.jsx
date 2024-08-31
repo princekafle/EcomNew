@@ -4,28 +4,37 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ShopContext } from '../../Context/ShopContext';
 
 const Navbar = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track login status
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track login status suruma initially log in hudaina so false
   const [menu, setMenu] = useState("shop");
   const { totalcartitem } = useContext(ShopContext);
   const navigate = useNavigate();
 
-  // Check login status on component mount
-  useEffect(() => {
-    const loginStatus = localStorage.getItem('isLoggedIn');
-    setIsLoggedIn(loginStatus === 'true');
-  }, []);
+ 
+
+  //useEffect with []: The effect runs once when the component is rendered and The effect does not run again unless the component is unmounted and remounted.
 
   // Listen for login status change
   useEffect(() => {
-    const handleLoginStatusChange = () => {
-      const loginStatus = localStorage.getItem('isLoggedIn');
-      setIsLoggedIn(loginStatus === 'true');
-    };
+    // const handleLoginStatusChange = () => {
+    //   const loginStatus = localStorage.getItem('isLoggedIn');  
+    // if(loginStatus === 'true'){
+    //   setIsLoggedIn(true);}
 
-    window.addEventListener('loginStatusChanged', handleLoginStatusChange);
+    //   else{
+    //     setIsLoggedIn(false);
+    //   }
+      
+    // };
+
+    //If loginStatus === 'true'then setIsLoggedIn(true) is called, indicating the user is logged in.
+// If loginStatus is anything else (e.g., 'false', null, etc.), setIsLoggedIn(false) is called, meaning the user is not logged in.
+
+    window.addEventListener('loginStatusChanged', setIsLoggedIn);
+    // this line adds an event listener to the global window object, listening for a custom event named 'loginStatusChanged'. When that event is triggered, it calls the setIsLoggedIn function directly.
 
     return () => {
-      window.removeEventListener('loginStatusChanged', handleLoginStatusChange);
+      window.removeEventListener('loginStatusChanged', setIsLoggedIn);
+    //   // window.removeEventListener('loginStatusChanged', setIslogin);: Removes the event listener when the component is destroyed.
     };
   }, []);
 

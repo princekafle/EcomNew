@@ -7,19 +7,23 @@ import { Link } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
-  const navigate = useNavigate();  // Ensure navigate is defined here
+  const navigate = useNavigate();  // Ensure navigate is defined here kinaki hamile navigate use garna mildaina without usenavigate()
 
   const handleLogin = (values) => {
-    // Retrieve signup data from localStorage
+    // Retrieve signup data from localStorage 
     const signupData = JSON.parse(localStorage.getItem('signupData'));
 
-    // Check if entered credentials match the stored signup data
+    // Check if entered credentials match the stored signup data in localstorage
+    // values.email vaneko hamile entered gareko email
+    //This checks if the signupData object exists and is not null or undefined. If signupData doesn't exist, the condition will stop here and evaluate as false.
+
     if (signupData && signupData.email === values.email && signupData.password === values.password) {
       // Set login status to true and save user data in localStorage
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('loggedInUser', JSON.stringify(signupData));
 
       // Dispatch a custom event to notify other components
+      // yo disaptchEvent nagarda chai login vaisakepaxi ni refresh nagaresamma lgoout ra user profile ko btn aaudaiana thyo
       window.dispatchEvent(new Event("loginStatusChanged"));
 
       // Show success message and redirect to home page
@@ -30,7 +34,9 @@ const Login = () => {
         }
       });
     } else {
+      localStorage.setItem('isLoggedIn', 'false');
       toast.error('Invalid credentials!');
+
     }
   };
 
@@ -81,7 +87,7 @@ const Login = () => {
                       type="password"
                       name="password"
                       id="password"
-                      placeholder="••••••••"
+                      placeholder="Enter password"
                       className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       required=""
                     />

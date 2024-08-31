@@ -10,11 +10,11 @@ const Signup = () => {
   const navigate = useNavigate();
 
   const handleSubmit = (values) => {
-    // Save the signup data to localStorage
+    // Save the signup values like username password as SignupData to localStorage
     localStorage.setItem('signupData', JSON.stringify(values));
 
     // Show toast message
-    toast.success('Registered successfully! Redirecting to shop...', {
+    toast.success('Registered successfully! Redirecting to Login Page...', {
       autoClose: 2000,
       onClose: () => {
         // Redirect to shop page after toast disappears

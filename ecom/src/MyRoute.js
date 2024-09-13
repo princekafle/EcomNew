@@ -11,6 +11,7 @@ import kid_banner from './Components/Assets/banner_kids.png'
 import Signup from './Pages/Signup';
 import Login from './Pages/Login';
 import MyProfile from './Pages/MyProfile';
+import Checkout from './Pages/Checkout';
 
 
 const MyRoute = () => {
@@ -26,6 +27,7 @@ const MyRoute = () => {
         <Route path="/signup" element={<Signup/>} />
         <Route path="/login" element={<Login/>} />
         <Route path="/profile" element={<MyProfile/>} />
+        <Route path="/checkout" element={<Checkout/>} />
 
         </Route>
     </Routes>

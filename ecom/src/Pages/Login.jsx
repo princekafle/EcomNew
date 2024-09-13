@@ -1,146 +1,117 @@
-import React from 'react';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
-import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import React,{useState} from 'react'
+import {Helmet} from "react-helmet";
 import { ToastContainer, toast } from 'react-toastify';
-import { Link } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-  const navigate = useNavigate();  // Ensure navigate is defined here kinaki hamile navigate use garna mildaina without usenavigate()
+    const navigate = useNavigate()
+    const [username,setUsername]= useState('')
+    const[password, setPassword]= useState('')
 
-  const handleLogin = (values) => {
-    // Retrieve signup data from localStorage 
-    const signupData = JSON.parse(localStorage.getItem('signupData'));
+    const handleSubmit= async e=>{
+        e.preventDefault()
+        try{
+            const{data}= await axios.post('http://127.0.0.1:8000/api/login/',{
+                username,password
+            })
+            //By default, axios converts the data object you provide into JSON format.
+            ////When the form is submitted, the axios.post() function sends a request to the signup API (http://127.0.0.1:8000/api/login/), passing the username and password as request object in backend 
+            // tespaxi backend bata je repsonse aauxa teslai data ma rakheko xa
+            localStorage.setItem('user', JSON.stringify(data))
+            navigate('/profile')
 
-    // Check if entered credentials match the stored signup data in localstorage
-    // values.email vaneko hamile entered gareko email
-    //This checks if the signupData object exists and is not null or undefined. If signupData doesn't exist, the condition will stop here and evaluate as false.
-
-    if (signupData && signupData.email === values.email && signupData.password === values.password) {
-      // Set login status to true and save user data in localStorage
-      localStorage.setItem('isLoggedIn', 'true');
-      localStorage.setItem('loggedInUser', JSON.stringify(signupData));
-
-      // Dispatch a custom event to notify other components
-      // yo disaptchEvent nagarda chai login vaisakepaxi ni refresh nagaresamma lgoout ra user profile ko btn aaudaiana thyo
-      window.dispatchEvent(new Event("loginStatusChanged"));
-
-      // Show success message and redirect to home page
-      toast.success('Login successful! Redirecting to home...', {
-        autoClose: 2000,
-        onClose: () => {
-          navigate('/');  // Correctly placed navigate function
         }
-      });
-    } else {
-      localStorage.setItem('isLoggedIn', 'false');
-      toast.error('Invalid credentials!');
+        catch(err){
+            toast.error(err.response.data.error)
+        }
 
     }
-  };
 
   return (
     <>
-      <Formik
-        initialValues={{ email: '', password: '' }}
-        validationSchema={Yup.object({
-          email: Yup.string().email('Invalid email').required('Required'),
-          password: Yup.string().required('Required'),
-        })}
-        onSubmit={handleLogin}
-      >
-        <section className="bg-gray-50 dark:bg-gray-900">
-          <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-            <Link to="#" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
-              <img className="w-8 h-8 mr-2" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo" />
-              Flowbite
-            </Link>
-            <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-              <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-                <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                  Sign in to your account
-                </h1>
-                <Form className="space-y-4 md:space-y-6">
-                  <div>
-                    <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                      Your Email
-                    </label>
-                    <Field
-                      type="email"
-                      name="email"
-                      id="email"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="name@company.com"
-                      required=""
-                    />
-                    <ErrorMessage name="email">
-                      {(msg) => <div style={{ color: 'red' }}>{msg}</div>}
-                    </ErrorMessage>
-                  </div>
+     <Helmet>
+        <title>Login </title>
+        <meta name="description" content="voting" />
+        
+        {/* //notes: seo ko lagi keyword haru content= vitra rakhra garne ho */}
+    {/* ani helmet tag chai react app ko title change garna use hunxa  */}
+    </Helmet>
+    <ToastContainer theme='colored' position='top-center'/>
 
-                  <div>
-                    <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                      Password
-                    </label>
-                    <Field
-                      type="password"
-                      name="password"
-                      id="password"
-                      placeholder="Enter password"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      required=""
-                    />
-                    <ErrorMessage name="password">
-                      {(msg) => <div style={{ color: 'red' }}>{msg}</div>}
-                    </ErrorMessage>
-                  </div>
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <img className="mx-auto h-10 w-auto" src="https://www.svgrepo.com/show/301692/login.svg" alt="Workflow"/>
+        <h2 className="mt-6 text-center text-3xl leading-9 font-extrabold text-gray-900">
+            Login into account
+        </h2>
+        <p className="mt-2 text-center text-sm leading-5 text-gray-500 max-w">
+            Or
+            <a href="#"
+                className="font-medium text-blue-600 hover:text-blue-500 focus:outline-none focus:underline transition ease-in-out duration-150">
+                Create a account
+            </a>
+        </p>
+    </div>
 
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-start">
-                      <div className="flex items-center h-5">
-                        <Field
-                          id="remember"
-                          aria-describedby="remember"
-                          type="checkbox"
-                          className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
-                          required=""
+    <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+            <form method="POST" action="#" onSubmit={handleSubmit}>
+               
+
+                <div className="mt-6">
+                    <label for="username" className="block text-sm font-medium leading-5 text-gray-700">Username</label>
+                    <div className="mt-1 flex rounded-md shadow-sm">
+                        
+                        <input 
+                        id="username" 
+                        name="username" 
+                        placeholder="john" 
+                        type="text" required=""
+                        className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                        onChange={e=>setUsername(e.target.value)}
+                        value={username}
                         />
-                      </div>
-                      <div className="ml-3 text-sm">
-                        <label htmlFor="remember" className="text-gray-500 dark:text-gray-300">
-                          Remember me
-                        </label>
-                      </div>
                     </div>
-                    <Link to="#" className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">
-                      Forgot password?
-                    </Link>
-                  </div>
-                  
-                  {/* Submit button */}
-                  <button
-                    type="submit"
-                    className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                  >
-                    Log in
-                  </button>
-                  
-                  <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                    Don’t have an account yet?{' '}
-                    <Link to="/signup" className="font-medium text-primary-600 hover:underline dark:text-primary-500">
-                      Sign up
-                    </Link>
-                  </p>
-                </Form>
-              </div>
-            </div>
-          </div>
-        </section>
-      </Formik>
-      <ToastContainer />
-    </>
-  );
-};
+                </div>
 
-export default Login;
+                
+
+                <div className="mt-6">
+                    <label for="password" className="block text-sm font-medium leading-5 text-gray-700">
+                        Password
+                    </label>
+                    <div className="mt-1 rounded-md shadow-sm">
+                        <input 
+                        id="password" 
+                        name="password" 
+                        type="password" 
+                        required=""
+                        className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                        
+                        onChange={e=>setPassword(e.target.value)}
+                        value={password}
+                        />
+                    </div>
+                </div>
+
+
+                <div className="mt-6">
+                    <span className="block w-full rounded-md shadow-sm">
+                        <button type="submit"
+                            className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
+                            Login account
+                        </button>
+                    </span>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+    </>
+  )
+}
+
+export default Login

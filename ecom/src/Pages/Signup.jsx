@@ -1,116 +1,131 @@
-import React from 'react';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
-import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import React,{useState} from 'react'
+import {Helmet} from "react-helmet";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Link } from 'react-router-dom';
 
 const Signup = () => {
-  const navigate = useNavigate();
+    const [username,setUsername]= useState('')
+    const[password, setPassword]= useState('')
 
-  const handleSubmit = (values) => {
-    // Save the signup values like username password as SignupData to localStorage
-    localStorage.setItem('signupData', JSON.stringify(values));
+    //The event object (e) contains information about the event that just occurred, such as a form submission, button click, or key press. In this case, it's the form submission event.
+    const handleSubmit= async e=>{
+        e.preventDefault()
+        // By default, when certain events such as form submissions or link clicks occur, the browser performs specific actions like refreshing the page or navigating to a new URL. However, using event.preventDefault(), we can intercept and override this default behavior, giving us more control over how our web application responds to user interactions.
+        try{
+            const{data}= await axios.post('http://127.0.0.1:8000/api/signup/',{
+                username,password
+            })
+            //When the form is submitted, the axios.post() function sends a request to the signup API (http://127.0.0.1:8000/api/signup/), passing the username and password from the state as the request payload:
 
-    // Show toast message
-    toast.success('Registered successfully! Redirecting to Login Page...', {
-      autoClose: 2000,
-      onClose: () => {
-        // Redirect to shop page after toast disappears
-        navigate('/login');
-      }
-    });
-  };
+               // local server'ko signup API ma mathy banako username ra password state var lai data ko rupma request pathauxa 
+            //await le chai wait garxa server ko  response na aaye samma
+            toast.success("Registered Successfully")
+            setUsername('')
+            setPassword('')
+
+                
+             //If the registration is successful (no error), this line triggers a success notification using the react-toastify library. The message "Registered Successfully" is displayed as a toast.
+
+            //After successful registration, these lines reset the form input fields by clearing the username and password state variables. This makes the input fields empty again.
+      
+        }
+        catch(err){
+            toast.error(err.response.data.error)
+            // err.response.data.error contains the error message returned by the server.
+        }
+
+    }
 
   return (
     <>
-      <Formik
-        initialValues={{
-          username: '',
-          email: '',
-          password: '',
-          cpassword: ''
-        }}
-        validationSchema={Yup.object({
-          username: Yup.string()
-            .matches(/^[A-Za-z]+$/, 'Username must contain only letters')
-            .max(20, 'Less than 20 characters')
-            .required('Username is mandatory'),
-          email: Yup.string()
-            .email('Invalid email')
-            .required('Email is mandatory'),
-          password: Yup.string()
-            .matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, 'Must contain 8 characters, one uppercase, one number, and one special case character')
-            .required('Password is mandatory'),
-          cpassword: Yup.string()
-            .oneOf([Yup.ref('password'), null], 'Passwords must match')
-            .required('Confirm password is mandatory')
-        })}
-        onSubmit={handleSubmit}
-      >
-        <section className="bg-gray-50 dark:bg-gray-900">
-          <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto min-h-screen lg:min-h-[80vh]">
-            <Link to="#" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
-              <img className="w-8 h-8 mr-2" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo" />
-              Flowbite    
-            </Link>
-            <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 md:max-w-lg lg:max-w-xl xl:max-w-2xl xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-              <div className="p-6 space-y-4 md:space-y-6 sm:p-8 lg:p-10 xl:p-12">
-                <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                  Create an account
-                </h1>
-                
-                <Form className="space-y-4 md:space-y-6">
-                  <ToastContainer theme='colored' position='top-center'/>
-                  <div>
-                    <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
-                    <Field type="email" name="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" required="" />
-                    <ErrorMessage name='email'>
-                      {msg => <div style={{ color: 'red' }}>{msg}</div>}
-                    </ErrorMessage>
-                  </div>
-                  <div>
-                    <label htmlFor="username" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your Username</label>
-                    <Field type="text" name="username" id="username" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="prince" required="" />
-                    <ErrorMessage name='username'>
-                      {msg => <div style={{ color: 'red' }}>{msg}</div>}
-                    </ErrorMessage>
-                  </div>
-                  <div>
-                    <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-                    <Field type="password" name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="" />
-                    <ErrorMessage name='password'>
-                      {msg => <div style={{ color: 'red' }}>{msg}</div>}
-                    </ErrorMessage>
-                  </div>
-                  <div>
-                    <label htmlFor="cpassword" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm password</label>
-                    <Field type="password" name="cpassword" id="cpassword" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="" />
-                    <ErrorMessage name='cpassword'>
-                      {msg => <div style={{ color: 'red' }}>{msg}</div>}
-                    </ErrorMessage>
-                  </div>
-                  <div className="flex items-start">
-                    <div className="flex items-center h-5">
-                      <Field id="terms" aria-describedby="terms" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" required="" />
-                    </div>
-                    <div className="ml-3 mb-3 text-sm">
-                      <label htmlFor="terms" className="font-light text-gray-500 dark:text-gray-300">I accept the <Link className="font-medium text-primary-600 hover:underline dark:text-primary-500" to="#">Terms and Conditions</Link></label>
-                    </div>
-                  </div>
-                  <button type="submit" className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Create an account</button>
-                  <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                    Already have an account? <Link to='/login' className="font-medium text-primary-600 hover:underline dark:text-primary-500">Login here</Link>
-                  </p>
-                </Form>
-              </div>
-            </div>
-          </div>
-        </section>
-      </Formik>
-    </>
-  );
-};
+    <Helmet>
+        <title>Registration </title>
+        <meta name="description" content="voting" />
+        
+        {/* //notes: seo ko lagi keyword haru content= vitra rakhra garne ho */}
+    {/* ani helmet tag chai react app ko title change garna use hunxa  */}
+    </Helmet>
+    <ToastContainer theme='colored' position='top-center'/>
 
-export default Signup;
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <img className="mx-auto h-10 w-auto" src="https://www.svgrepo.com/show/301692/login.svg" alt="Workflow"/>
+        <h2 className="mt-6 text-center text-3xl leading-9 font-extrabold text-gray-900">
+            Create a new account
+        </h2>
+        <p className="mt-2 text-center text-sm leading-5 text-gray-500 max-w">
+            Or
+            <a href="#"
+                className="font-medium text-blue-600 hover:text-blue-500 focus:outline-none focus:underline transition ease-in-out duration-150">
+                login to your account
+            </a>
+        </p>
+    </div>
+
+    <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+            <form method="POST" action="#" onSubmit={handleSubmit}>
+               
+
+                <div className="mt-6">
+                    <label for="username" className="block text-sm font-medium leading-5 text-gray-700">Username</label>
+                    <div className="mt-1 flex rounded-md shadow-sm">
+                        
+                        <input 
+                        id="username" 
+                        name="username" 
+                        placeholder="john" 
+                        type="text" required=""
+                        className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                        onChange={e=>setUsername(e.target.value)}
+                        value={username}
+
+                       
+                        />
+                    </div>
+                </div>
+
+                
+
+                <div className="mt-6">
+                    <label for="password" className="block text-sm font-medium leading-5 text-gray-700">
+                        Password
+                    </label>
+                    <div className="mt-1 rounded-md shadow-sm">
+                        <input 
+                        id="password" 
+                        name="password" 
+                        type="password" 
+                        required=""
+                        className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                        
+                        onChange={e=>setPassword(e.target.value)}
+                        value={password}
+
+                        //e refers to the event object, specifically the change event triggered when the user types into the input.
+                        //e.target.value captures the current value (text) entered by the user in the input field.
+                        // //In short, whenever the user types something in the password field, the new input value is stored in the password state variable.
+                        />
+                    </div>
+                </div>
+
+
+                <div className="mt-6">
+                    <span className="block w-full rounded-md shadow-sm">
+                        <button type="submit"
+                            className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
+                            Create account
+                        </button>
+                    </span>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+    </>
+  )
+}
+
+export default Signup

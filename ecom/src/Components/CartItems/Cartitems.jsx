@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { ShopContext } from '../../Context/ShopContext';
+import { Link } from 'react-router-dom';
 
 const Cartitems = () => {
 
@@ -163,7 +164,7 @@ const Cartitems = () => {
                             </ul>
 
                             <div className="mt-8 space-y-2">
-                                <button type="button" className="text-sm px-4 py-2.5 w-full font-semibold tracking-wide bg-blue-600 hover:bg-blue-700 text-white rounded-md">Checkout</button>
+                               <Link to='/checkout'> <button type="button" className="text-sm px-4 py-2.5 w-full font-semibold tracking-wide bg-blue-600 hover:bg-blue-700 text-white rounded-md">Checkout</button></Link>
                                 <button type="button" className="text-sm px-4 py-2.5 w-full font-semibold tracking-wide bg-transparent text-gray-800 border border-gray-300 rounded-md">Continue Shopping</button>
                             </div>
                         </div>

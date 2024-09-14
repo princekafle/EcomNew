@@ -1,4 +1,5 @@
 from django.shortcuts import render
+
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from django.http import JsonResponse
@@ -6,6 +7,23 @@ from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
+from rest_framework import generics
+from .models import Product
+from .serializers import ProductSerializer
+
+class ProductList(generics.ListCreateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+class ProductListView(generics.ListCreateAPIView):
+    queryset = Product.objects.all()  # Order by creation timestamp
+    serializer_class = ProductSerializer
+
+class ProductDetailView(generics.RetrieveAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+
 
 @csrf_exempt
 def signup(request):
@@ -22,6 +40,7 @@ def signup(request):
             return JsonResponse({'error': 'Username is already taken by another'}, status=400)
         
 @csrf_exempt
+
 def login(request):
     if request.method =="POST":
         data = JSONParser().parse(request)
@@ -38,5 +57,17 @@ def login(request):
             except:
                 token=  Token.objects.create(user=user)
                 # else authenticated user ko token create garxa ra last ma json form ma display garxa tala ko line le
-            return JsonResponse({'token': str(token)}, status=200)
+            return JsonResponse({
+                'token': str(token),         # Token as string
+                'username': user.username,   # Username from authenticated user
+                'password': data['password'] # Return the same password (be careful with sensitive data)
+            }, status=200)
+
+
+
+
+
+
+
+
 

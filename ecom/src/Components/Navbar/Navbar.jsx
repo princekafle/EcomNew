@@ -2,6 +2,10 @@ import React, { useEffect, useState, useContext } from 'react';
 import logo from '../Assets/logo.png';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShopContext } from '../../Context/ShopContext';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track login status suruma initially log in hudaina so false
@@ -15,38 +19,40 @@ const Navbar = () => {
 
   // Listen for login status change
   useEffect(() => {
-    // const handleLoginStatusChange = () => {
-    //   const loginStatus = localStorage.getItem('isLoggedIn');  
-    // if(loginStatus === 'true'){
-    //   setIsLoggedIn(true);}
+    const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    setIsLoggedIn(loggedIn);
+    
+    // Listen for login status changes via the custom event
+    const handleLoginStatusChange = () => {
+      const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
+      //This checks if the retrieved value is exactly equal to the string 'true'. if true xa vane that is loggedin
+      // If the localStorage value for 'isLoggedIn' is 'true', then loggedIn will be true, and setIsLoggedIn(true) will be called, updating the state to true.
+      setIsLoggedIn(loggedIn);
+    };
 
-    //   else{
-    //     setIsLoggedIn(false);
-    //   }
-      
-    // };
+    window.addEventListener('loginStatusChanged', handleLoginStatusChange);
+
+    return () => {
+      window.removeEventListener('loginStatusChanged', handleLoginStatusChange);
+    };
+  }, []);
+
+
 
     //If loginStatus === 'true'then setIsLoggedIn(true) is called, indicating the user is logged in.
 // If loginStatus is anything else (e.g., 'false', null, etc.), setIsLoggedIn(false) is called, meaning the user is not logged in.
 
-    window.addEventListener('loginStatusChanged', setIsLoggedIn);
-    // this line adds an event listener to the global window object, listening for a custom event named 'loginStatusChanged'. When that event is triggered, it calls the setIsLoggedIn function directly.
+    // 'loginStatusChanged' when this event is triggered (dispatched), the setIsLoggedIn function will be executed.
 
-    return () => {
-      window.removeEventListener('loginStatusChanged', setIsLoggedIn);
     //   // window.removeEventListener('loginStatusChanged', setIslogin);: Removes the event listener when the component is destroyed.
+
+
+    const handleLogout = () => {
+      localStorage.removeItem('user');
+      localStorage.removeItem('isLoggedIn');
+      setIsLoggedIn(false);
+      navigate('/login'); // Redirect to login page after logout
     };
-  }, []);
-
-  const handleLogout = () => {
-    // Remove login status and user data from localStorage
-    localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('loggedInUser');
-
-    // Set login status to false and redirect to login page
-    setIsLoggedIn(false);
-    navigate('/login');
-  };
 
   return (
     <>
@@ -112,6 +118,8 @@ const Navbar = () => {
           </div>
         </nav>
       </header>
+  
+
     </>
   );
 };

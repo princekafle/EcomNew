@@ -19,10 +19,17 @@ const Login = () => {
             //By default, axios converts the data object you provide into JSON format.
             ////When the form is submitted, the axios.post() function sends a request to the signup API (http://127.0.0.1:8000/api/login/), passing the username and password as request object in backend 
             // tespaxi backend bata je repsonse aauxa teslai data ma rakheko xa
-            localStorage.setItem('user', JSON.stringify(data))
-            navigate('/profile')
+            localStorage.setItem('user', JSON.stringify(data)); // store user data came from backend 
+            localStorage.setItem('isLoggedIn', 'true'); // store login status
+            window.dispatchEvent(new Event('loginStatusChanged')); 
+            // This creates a new custom event named 'loginStatusChanged'. When the event is dispatched, any event listeners that are listening for the 'loginStatusChanged' event will be executed. simply logged in vayo vanera inform gareko
+            toast.success('Login successfully, redirecting to homepage!');
+            setTimeout(() => {
+              navigate('/'); // Wait for a moment before redirecting
+            }, 5000); // Delay the navigation for 2 seconds to let the toast be visible
+          }
 
-        }
+        
         catch(err){
             toast.error(err.response.data.error)
         }

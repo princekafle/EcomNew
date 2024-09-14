@@ -77,46 +77,19 @@ const Checkout = () => {
             </div>
 
             <div class="md:col-span-2">
-              <div class="grid gap-4 sm:grid-cols-2">
-                <div class="flex items-center">
-                  <input type="radio" class="w-5 h-5 cursor-pointer" id="card" checked />
-                  <label for="card" class="ml-4 flex gap-2 cursor-pointer">
-                    <img src="https://readymadeui.com/images/visa.webp" class="w-12" alt="card1" />
-                    <img src="https://readymadeui.com/images/american-express.webp" class="w-12" alt="card2" />
-                    <img src="https://readymadeui.com/images/master.webp" class="w-12" alt="card3" />
-                  </label>
-                </div>
-
-                <div class="flex items-center">
-                  <input type="radio" class="w-5 h-5 cursor-pointer" id="paypal" />
-                  <label for="paypal" class="ml-4 flex gap-2 cursor-pointer">
-                    <img src="https://readymadeui.com/images/paypal.webp" class="w-20" alt="paypalCard" />
-                  </label>
-                </div>
-              </div>
-
-              <div class="grid sm:grid-cols-4 gap-4 mt-4">
-                <div class="col-span-2">
-                  <input type="number" placeholder="Card number"
-                    class="px-4 py-3 bg-white text-gray-800 w-full text-sm border-2 rounded-md focus:border-blue-500 outline-none" />
-                </div>
-                <div>
-                  <input type="number" placeholder="EXP."
-                    class="px-4 py-3 bg-white text-gray-800 w-full text-sm border-2 rounded-md focus:border-blue-500 outline-none" />
-                </div>
-                <div>
-                  <input type="number" placeholder="CVV"
-                    class="px-4 py-3 bg-white text-gray-800 w-full text-sm border-2 rounded-md focus:border-blue-500 outline-none" />
-                </div>
-              </div>
+       
+              <select name="" id="" className='mt-5'>
+                <option value="">Esewa</option>
+                <option value="">Cash on delivery</option>
+              </select>
+         
             </div>
           </div>
 
           <div class="flex flex-wrap justify-end gap-4 mt-12">
+
             <button type="button"
-              class="px-6 py-3 text-sm font-semibold tracking-wide bg-transparent border-2 text-gray-800 rounded-md hover:bg-gray-100">Pay later</button>
-            <button type="button"
-              class="px-6 py-3 text-sm font-semibold tracking-wide bg-blue-600 text-white rounded-md hover:bg-blue-700">Pay now</button>
+              class="px-6 py-3 text-sm font-semibold tracking-wide bg-blue-600 text-white rounded-md hover:bg-blue-700">Proceed now</button>
           </div>
         </div>
       </div>

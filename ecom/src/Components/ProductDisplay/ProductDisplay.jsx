@@ -4,6 +4,10 @@ import { Link } from 'react-router-dom';
 
 const ProductDisplay = (props) => {
     const { product } = props;
+
+    
+
+        
     
     // Get addTocart function from ShopContext
     const { addTocart } = useContext(ShopContext);
@@ -60,7 +64,8 @@ const ProductDisplay = (props) => {
 
                         {/* Add to Cart Button */}
                         <Link to={'/cart'}><button
-                            onClick={() => addTocart(product.id)} // Adding product to cart
+                            onClick={() => addTocart(product.id)}
+                             // Adding product to cart
                             type="button"
                             className="w-full mt-8 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-md">
                             Add to cart

@@ -23,8 +23,9 @@ const MyRoute = () => {
         <Route path="/mens" element={<Shopcategory banner={men_banner} category="men" />} />
         <Route path="/womens" element={<Shopcategory banner={women_banner} category="women" />} />
         <Route path="/kids" element={<Shopcategory banner={kid_banner} category="kid" />} />
-        {/* <Route path="/products/:productId" element={<Products />} /> */}
-        <Route path="/products/:id" element={<Card />} />
+     
+        <Route path='/products/:productId' element={< Products/>}/>
+        {/* <Route path="/products/id" element={<Card />} /> */}
 
         <Route path="/cart" element={<Cart />} />
         <Route path="/signup" element={<Signup/>} />

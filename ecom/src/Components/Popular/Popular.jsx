@@ -1,19 +1,35 @@
-import React from 'react'
-import data_product from '../Assets/data'
-import './popular.css'
+
+import React, { useEffect, useState } from 'react';
 import Card from '../Card/Card'
+import axios from 'axios';
+import './popular.css'
+
 
 const Popular = () => {
+  const [product,setProduct]=useState([])
+
+  //  This state variable "products" will hold the array of products fetched from the API.
+  useEffect(()=>{
+    axios.get(`http://127.0.0.1:8000/api/products/`)
+
+    //  Sends a GET request to the Fake Store API to fetch products data.
+    .then(res=>(
+     setProduct(res.data)))
+     // Updates the products state with the data received from the API response.
+     .catch(err=> console.log(err))
+  },[])
+
   return (
     <>
     <div className="popular">
-    <h1>Popular In Women</h1>
-    <hr/>
+    <h1>Popular Items</h1>
+    <hr />
     <div className="popular-item">
-        {data_product.map((item,i)=>{
-            return <Card key ={i} id={item.id} name = {item.name} image= {item.image} new_price = {item.new_price} old_price = {item.old_price}/>
-// note yaha bata sabai data card ma props ko rupma janxa hai 
-        })}
+        
+    {product.map((item,i)=>
+  <Card data = {item} key = {i}/>
+)}
+
     </div>
     </div>
     </>

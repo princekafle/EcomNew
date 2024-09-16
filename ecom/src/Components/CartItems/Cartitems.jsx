@@ -6,10 +6,7 @@ const Cartitems = () => {
 
     // for size clikcking in cart item page
 
-   
-    
-
-        //When you click on an option (e.g., "SM"), it updates the selectedSize state.
+   //When you click on an option (e.g., "SM"), it updates the selectedSize state.
 // The button then shows the updated size.
 // The dropdown disappears on hover out, but the selected size stays updated.
 

@@ -26,7 +26,7 @@ const Login = () => {
             toast.success('Login successfully, redirecting to homepage!');
             setTimeout(() => {
               navigate('/'); // Wait for a moment before redirecting
-            }, 5000); // Delay the navigation for 2 seconds to let the toast be visible
+            }, 2000); // Delay the navigation for 2 seconds to let the toast be visible
           }
 
         

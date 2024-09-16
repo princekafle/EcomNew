@@ -1,5 +1,6 @@
 .new-collections {
     display: flex;
+    flex-wrap: wrap;
     flex-direction: column;
     align-items: center;
     gap: 10px;
@@ -25,10 +26,6 @@
     display: flex;
     flex-wrap: wrap;
     /* Ensure items can wrap to the next line */
-    justify-content: space-evenly;
-    /* Center items horizontally */
     gap: 20px;
-    /* Add gap between items */
-    /* Ensure it takes full width */
     margin-top: 50px;
 }

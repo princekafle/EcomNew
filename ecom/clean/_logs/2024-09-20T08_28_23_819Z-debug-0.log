@@ -7,13 +7,7 @@
 6 silly config load:file:C:\Users\Dell\AppData\Roaming\npm\etc\npmrc
 7 verbose title npm start
 8 verbose argv "start"
-9 verbose logfile logs-max:10 dir:E:\Durshiskhsya\reactn\ecom\clean\_logs\2024-09-16T08_11_49_608Z-
-10 verbose logfile E:\Durshiskhsya\reactn\ecom\clean\_logs\2024-09-16T08_11_49_608Z-debug-0.log
+9 verbose logfile logs-max:10 dir:E:\Durshiskhsya\reactn\ecom\clean\_logs\2024-09-20T08_28_23_819Z-
+10 verbose logfile E:\Durshiskhsya\reactn\ecom\clean\_logs\2024-09-20T08_28_23_819Z-debug-0.log
 11 silly logfile start cleaning logs, removing 2 files
 12 silly logfile done cleaning log files
-13 verbose cwd E:\Durshiskhsya\reactn\ecom
-14 verbose os Windows_NT 10.0.19045
-15 verbose node v20.12.2
-16 verbose npm  v10.8.2
-17 verbose exit 0
-18 info ok

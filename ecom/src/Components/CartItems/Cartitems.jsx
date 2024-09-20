@@ -3,7 +3,7 @@ import { ShopContext } from '../../Context/ShopContext';
 import { Link } from 'react-router-dom';
 
 const Cartitems = () => {
-    const { getTotalcartamount, all_product, cartItem, setCartItem, addTocart, Removefromcart } = useContext(ShopContext);
+    const { getTotalcartamount, all_product, cartItem, setCartItem, updateCartItemSize , cartItemSizes, addTocart, Removefromcart } = useContext(ShopContext);
 
     // Load cart items from localStorage when the component mounts
     useEffect(() => {
@@ -27,9 +27,13 @@ const Cartitems = () => {
             ...prevSizes,
             [productId]: size,
         }));
+        updateCartItemSize(productId, size);
     };
+    console.log(cartItemSizes);
+
 
     return (
+        
         <div className="font-sans md:max-w-4xl max-md:max-w-xl mx-auto bg-white py-4">
             <div className="grid md:grid-cols-3 gap-4">
                 <div className="md:col-span-2 bg-gray-100 p-4 rounded-md">
@@ -38,7 +42,7 @@ const Cartitems = () => {
 
                     <div className="space-y-4">
                         {all_product.map((product) => {
-                            const quantity = cartItem[product.id];
+                            const quantity = cartItem[product.id]||0;
                             if (quantity > 0) {
                                 return (
                                     <div key={product.id} className="grid grid-cols-3 items-center gap-4">
@@ -168,6 +172,7 @@ const Cartitems = () => {
                 </div>
             </div>
         </div>
+            
     );
 };
 

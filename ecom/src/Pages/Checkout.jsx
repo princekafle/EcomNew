@@ -1,43 +1,88 @@
-import React, { useContext } from 'react';
-import { ShopContext } from '../Context/ShopContext'
+import React, { useContext, useState } from 'react';
+import { ShopContext } from '../Context/ShopContext';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Checkout = () => {
-  const { cartItem, all_product, getTotalcartamount } = useContext(ShopContext);
+  const { cartItem, all_product, getTotalcartamount, cartItemSizes } = useContext(ShopContext);
+  const [personalDetails, setPersonalDetails] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: ''
+  });
+  const [addressDetails, setAddressDetails] = useState({
+    streetAddress: '',
+    city: '',
+    state: '',
+    zipCode: ''
+  });
+  const [paymentMethod, setPaymentMethod] = useState('');
+  const navigate = useNavigate();
 
   // Calculate total cost
   const totalCost = getTotalcartamount();
 
   // Function to get product details for the cart items
   const getOrderDetails = () => {
-    // Retrieves an array of the keys (i.e., product IDs) from the cartItem object and Iterates over each product ID (itemId) in the cart.
     return Object.keys(cartItem).map((itemId) => {
       const quantity = cartItem[itemId];
-      //Gets the quantity of the current item from the cartItem object.
+      const size = cartItemSizes[itemId] || 'N/A';
       if (quantity > 0) {
-        //Checks if the quantity of the item is greater than zero. If so, it continues to process the item.
         const product = all_product.find((product) => product.id === Number(itemId));
-        // api bata lyako all_product ko id ra cart ma vako item ko id equals vayeko product lai matra product ma stor garxa
         return product ? {
           name: product.name,
           quantity,
+          size,
           price: product.new_price,
         } : null;
-        // If a  condition matching product is found, it creates an object with the product's name, quantity, size, and price. If no matching product is found, it returns null.
-
       }
       return null;
     }).filter(item => item !== null);
-    // cart item ma nulll vako product lai filter garxa ra dekhaudaina 
   };
 
   const orderDetails = getOrderDetails();
+  const userdata = JSON.parse(localStorage.getItem('user'));  
+  const orderData = {
+    user: userdata.username,
+    name: `${personalDetails.firstName} ${personalDetails.lastName}`,
+    email: personalDetails.email,
+    phone: personalDetails.phone,
+    address: addressDetails.streetAddress,
+    city: addressDetails.city,
+    state: addressDetails.state,
+    zip_code: addressDetails.zipCode,
+    payment_method: paymentMethod,
+    total_cost: totalCost,
+    products: orderDetails // Store all order details in an array
+  };
+  console.log(orderData);
 
+  // Define the async function to handle order submission
+  const handleProceed = async () => {
+    try {
+      const { data } = await axios.post('http://127.0.0.1:8000/api/checkout/',orderData);
+      console.log(data);
+  
+      if (paymentMethod === 'Esewa') {
+        // Redirect to eSewa payment page
+        navigate('/cart'); // Modify with actual eSewa URL
+      } else {
+        navigate('/ordersuccess');
+      }
+    } catch (error) {
+      console.error('Error processing order:', error);
+      // Handle error (e.g., show an error message to the user)
+    }
+  };
+  
   return (
     <div className="font-sans bg-white p-4">
       <div className="max-w-4xl mx-auto">
         <div className="text-center">
           <h2 className="text-3xl font-extrabold text-gray-800 inline-block border-b-[3px] border-gray-800 pb-1">Checkout</h2>
         </div>
+        <form onSubmit={(e) => { e.preventDefault(); handleProceed(); }}>
 
         {/* Order Details Section */}
         <div className="mt-12">
@@ -74,6 +119,7 @@ const Checkout = () => {
           </div>
         </div>
 
+        {/* Personal Details Section */}
         <div className="grid md:grid-cols-3 gap-4 mt-12">
           <div>
             <h3 className="text-3xl font-bold text-gray-300">01</h3>
@@ -81,29 +127,32 @@ const Checkout = () => {
           </div>
 
           <div className="md:col-span-2">
-            <form>
-              <div className="grid sm:grid-cols-2 gap-4">
-                <div>
-                  <input type="text" placeholder="First name"
-                    className="px-4 py-3 bg-white text-gray-800 w-full text-sm border-2 rounded-md focus:border-blue-500 outline-none" />
-                </div>
-                <div>
-                  <input type="text" placeholder="Last name"
-                    className="px-4 py-3 bg-white text-gray-800 w-full text-sm border-2 rounded-md focus:border-blue-500 outline-none" />
-                </div>
-                <div>
-                  <input type="email" placeholder="Email address"
-                    className="px-4 py-3 bg-white text-gray-800 w-full text-sm border-2 rounded-md focus:border-blue-500 outline-none" />
-                </div>
-                <div>
-                  <input type="number" placeholder="Phone number"
-                    className="px-4 py-3 bg-white text-gray-800 w-full text-sm border-2 rounded-md focus:border-blue-500 outline-none" />
-                </div>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div>
+                <input type="text" placeholder="First name" value={personalDetails.firstName}
+                  onChange={(e) => setPersonalDetails({ ...personalDetails, firstName: e.target.value })}
+                  className="px-4 py-3 bg-white text-gray-800 w-full text-sm border-2 rounded-md focus:border-blue-500 outline-none" />
               </div>
-            </form>
+              <div>
+                <input type="text" placeholder="Last name" value={personalDetails.lastName}
+                  onChange={(e) => setPersonalDetails({ ...personalDetails, lastName: e.target.value })}
+                  className="px-4 py-3 bg-white text-gray-800 w-full text-sm border-2 rounded-md focus:border-blue-500 outline-none" />
+              </div>
+              <div>
+                <input type="email" placeholder="Email address" value={personalDetails.email}
+                  onChange={(e) => setPersonalDetails({ ...personalDetails, email: e.target.value })}
+                  className="px-4 py-3 bg-white text-gray-800 w-full text-sm border-2 rounded-md focus:border-blue-500 outline-none" />
+              </div>
+              <div>
+                <input type="number" placeholder="Phone number" value={personalDetails.phone}
+                  onChange={(e) => setPersonalDetails({ ...personalDetails, phone: e.target.value })}
+                  className="px-4 py-3 bg-white text-gray-800 w-full text-sm border-2 rounded-md focus:border-blue-500 outline-none" />
+              </div>
+            </div>
           </div>
         </div>
 
+        {/* Address Section */}
         <div className="grid md:grid-cols-3 gap-4 mt-12">
           <div>
             <h3 className="text-3xl font-bold text-gray-300">02</h3>
@@ -111,50 +160,58 @@ const Checkout = () => {
           </div>
 
           <div className="md:col-span-2">
-            <form>
-              <div className="grid sm:grid-cols-2 gap-4">
-                <div>
-                  <input type="text" placeholder="Street address"
-                    className="px-4 py-3 bg-white text-gray-800 w-full text-sm border-2 rounded-md focus:border-blue-500 outline-none" />
-                </div>
-                <div>
-                  <input type="text" placeholder="City"
-                    className="px-4 py-3 bg-white text-gray-800 w-full text-sm border-2 rounded-md focus:border-blue-500 outline-none" />
-                </div>
-                <div>
-                  <input type="text" placeholder="State"
-                    className="px-4 py-3 bg-white text-gray-800 w-full text-sm border-2 rounded-md focus:border-blue-500 outline-none" />
-                </div>
-                <div>
-                  <input type="number" placeholder="Zip Code"
-                    className="px-4 py-3 bg-white text-gray-800 w-full text-sm border-2 rounded-md focus:border-blue-500 outline-none" />
-                </div>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div>
+                <input type="text" placeholder="Street address" value={addressDetails.streetAddress}
+                  onChange={(e) => setAddressDetails({ ...addressDetails, streetAddress: e.target.value })}
+                  className="px-4 py-3 bg-white text-gray-800 w-full text-sm border-2 rounded-md focus:border-blue-500 outline-none" />
               </div>
-            </form>
+              <div>
+                <input type="text" placeholder="City" value={addressDetails.city}
+                  onChange={(e) => setAddressDetails({ ...addressDetails, city: e.target.value })}
+                  className="px-4 py-3 bg-white text-gray-800 w-full text-sm border-2 rounded-md focus:border-blue-500 outline-none" />
+              </div>
+              <div>
+                <input type="text" placeholder="State" value={addressDetails.state}
+                  onChange={(e) => setAddressDetails({ ...addressDetails, state: e.target.value })}
+                  className="px-4 py-3 bg-white text-gray-800 w-full text-sm border-2 rounded-md focus:border-blue-500 outline-none" />
+              </div>
+              <div>
+                <input type="text" placeholder="Zip Code" value={addressDetails.zipCode}
+                  onChange={(e) => setAddressDetails({ ...addressDetails, zipCode: e.target.value })}
+                  className="px-4 py-3 bg-white text-gray-800 w-full text-sm border-2 rounded-md focus:border-blue-500 outline-none" />
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-4 mt-12">
-          <div>
-            <h3 className="text-3xl font-bold text-gray-300">03</h3>
-            <h3 className="text-xl font-bold text-gray-800 mt-1">Payment method</h3>
-          </div>
-
-          <div className="md:col-span-2">
-            <select name="" id="" className='mt-5'>
-              <option value="">Esewa</option>
-              <option value="">Cash on delivery</option>
-            </select>
+        {/* Payment Method Section */}
+        <div className="mt-12">
+          <h3 className="text-3xl font-bold text-gray-300">03</h3>
+          <h3 className="text-xl font-bold text-gray-800 mt-1">Payment Method</h3>
+          <div className="flex flex-col mt-4">
+            <label className="inline-flex items-center">
+              <input type="radio" value="Cash" checked={paymentMethod === 'Cash'}
+                onChange={(e) => setPaymentMethod(e.target.value)}
+                className="form-radio h-5 w-5 text-indigo-600 transition duration-150 ease-in-out" />
+              <span className="ml-2">Cash on Delivery</span>
+            </label>
+            <label className="inline-flex items-center mt-2">
+              <input type="radio" value="Esewa" checked={paymentMethod === 'Esewa'}
+                onChange={(e) => setPaymentMethod(e.target.value)}
+                className="form-radio h-5 w-5 text-indigo-600 transition duration-150 ease-in-out" />
+              <span className="ml-2">eSewa</span>
+            </label>
           </div>
         </div>
 
-        <div className="flex flex-wrap justify-end gap-4 mt-12">
-          <button type="button"
-            className="px-6 py-3 text-sm font-semibold tracking-wide bg-blue-600 text-white rounded-md hover:bg-blue-700">Proceed now</button>
+        {/* Submit Button */}
+        <div className="mt-12">
+          <button type="submit" className="w-full bg-blue-600 text-white px-4 py-3 rounded-md font-bold">Proceed to Payment</button>
         </div>
-      </div>
+      </form>
     </div>
-  );
-}
+    </div>
+  )};
 
 export default Checkout;

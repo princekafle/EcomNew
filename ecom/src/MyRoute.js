@@ -13,6 +13,7 @@ import Login from './Pages/Login';
 import MyProfile from './Pages/MyProfile';
 import Checkout from './Pages/Checkout';
 import Card from './Components/Card/Card';
+import Ordersucc from './Pages/Ordersucc';
 
 
 const MyRoute = () => {
@@ -32,7 +33,7 @@ const MyRoute = () => {
         <Route path="/login" element={<Login/>} />
         <Route path="/profile" element={<MyProfile/>} />
         <Route path="/checkout" element={<Checkout/>} />
-
+        <Route path="/ordersuccess" element={<Ordersucc/>} />
         </Route>
     </Routes>
   );

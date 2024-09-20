@@ -26,6 +26,15 @@ const ShopContextProvider = ({ children }) => {
 
     const [all_product, Setall_product] = useState([]);
 
+    const [cartItemSizes, setCartItemSizes] = useState({});
+
+  const updateCartItemSize = (productId, size) => {
+    setCartItemSizes((prevSizes) => ({
+      ...prevSizes,
+      [productId]: size,
+    }));
+  };
+
     // Fetching product data from API
     useEffect(() => {
       fetch('http://127.0.0.1:8000/api/products/')
@@ -140,7 +149,7 @@ const getInitialCart = () => {
     };
     
 
-    const contextValue = {getTotalcartamount, totalcartitem, all_product, selectedSize, SetselectedSize, cartItem, setCartItem, addTocart, Removefromcart };
+    const contextValue = {getTotalcartamount, totalcartitem, cartItemSizes, updateCartItemSize, all_product, selectedSize, SetselectedSize, cartItem, setCartItem, addTocart, Removefromcart };
 
     //const contextValue = { all_product, cartItem, setCartItem, addTocart, Removefromcart };: This object holds the values that will be provided to components consuming the context. It includes the list of products, the current cart state, and functions to manipulate the cart.
 

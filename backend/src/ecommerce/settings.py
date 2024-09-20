@@ -146,7 +146,7 @@ CORS_ORIGINS_ALLOW_ALL = True
 
 CORS_ALLOWED_ORIGINS = [
    
-    "http://localhost:3001",
+    "http://localhost:3000",
     
 ]
 CORS_ALLOW_METHODS = (

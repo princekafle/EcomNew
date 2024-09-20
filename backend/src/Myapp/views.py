@@ -10,6 +10,13 @@ from rest_framework.authtoken.models import Token
 from rest_framework import generics
 from .models import Product
 from .serializers import ProductSerializer
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+
+from rest_framework.decorators import api_view
+from .models import Order 
+from django.utils import timezone
 
 class ProductList(generics.ListCreateAPIView):
     queryset = Product.objects.all()
@@ -64,10 +71,69 @@ def login(request):
             }, status=200)
 
 
+@api_view(['POST'])
+def checkout(request):
+    if request.method == "POST":
+        data = JSONParser().parse(request)
+
+        # Assuming 'user' is passed in the request data, or you can get it from the request
+        user = request.user
+        
+        # Create a new Order instance with all details
+        order = Order.objects.create(
+            user=user,
+            total_amount=data['total_cost'],  # Total cost from the request
+            name=data['name'],
+            email=data['email'],
+            phone=data['phone'],
+            address=data['address'],
+            city=data['city'],
+            state=data['state'],
+            zip_code=data['zip_code'],
+            payment_method=data['payment_method'],
+            created_at=timezone.now(),
+            product_name= data['product_name'],
+            quantity =data['quantity'],
+            size = data['size'],
+            price = data['price'],
+            # Add any other necessary fields for the Order model
+        )
+        
+        return JsonResponse({'message': 'Order placed successfully!', 'order_id': order.id}, status=201)
+
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
 
 
 
 
 
 
-
+@api_view(['POST'])
+def checkout(request):
+    if request.method == 'POST':
+        try:
+            data = request.data
+            
+            # Create an order for each product in the products list
+            for item in data['products']:
+                order = Order.objects.create(
+                    user=data['user'],
+                    total_cost=data['total_cost'],  # You may want to adjust this for individual items
+                    name=data['name'],
+                    email=data['email'],
+                    phone=data['phone'],
+                    address=data['address'],
+                    city=data['city'],
+                    state=data['state'],
+                    zip_code=data['zip_code'],
+                    payment_method=data['payment_method'],
+                    created_at=timezone.now(),
+                    product_name=item['product_name'],  # Product-specific details
+                    quantity=item['quantity'],
+                    size=item['size'],
+                    price=item['price']
+                )
+            
+            return Response({'message': 'Order placed successfully!', 'order_id': order.id}, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -8,7 +8,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
-    path('', include('Myapp.urls')),  # Include your app's URL patterns
+    path('api/', include('Myapp.urls')),  # Include your app's URL patterns
 
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

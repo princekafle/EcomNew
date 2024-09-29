@@ -43,8 +43,10 @@ const Checkout = () => {
 
   const orderDetails = getOrderDetails();
   const userdata = JSON.parse(localStorage.getItem('user'));  
+
+  // Ensure you get the correct user ID, assuming it is stored in localStorage
   const orderData = {
-    user: userdata.username,
+    user: userdata.token, // Assuming 'id' is the correct field for user ID
     name: `${personalDetails.firstName} ${personalDetails.lastName}`,
     email: personalDetails.email,
     phone: personalDetails.phone,
@@ -54,27 +56,31 @@ const Checkout = () => {
     zip_code: addressDetails.zipCode,
     payment_method: paymentMethod,
     total_cost: totalCost,
-    products: orderDetails // Store all order details in an array
+    items: orderDetails // Ensure 'items' is the correct field name your API expects
   };
   console.log(orderData);
 
-  // Define the async function to handle order submission
-  const handleProceed = async () => {
-    try {
-      const { data } = await axios.post('http://127.0.0.1:8000/api/checkout/',orderData);
-      console.log(data);
-  
-      if (paymentMethod === 'Esewa') {
-        // Redirect to eSewa payment page
-        navigate('/cart'); // Modify with actual eSewa URL
-      } else {
-        navigate('/ordersuccess');
-      }
-    } catch (error) {
-      console.error('Error processing order:', error);
-      // Handle error (e.g., show an error message to the user)
+// In Checkout.jsx
+const handleProceed = async () => {
+  try {
+    if (paymentMethod === 'Esewa') {
+      // Handle eSewa payment redirection first
+      const response = await axios.post('http://127.0.0.1:8000/api/checkout/', orderData);
+      console.log(response.data);
+      // Redirect to eSewa and wait for success response
+      navigate('/esewa-payment-gateway'); // Redirect to eSewa payment page
+    } else if (paymentMethod === 'Cash') {
+      // Proceed to order confirmation for Cash on Delivery
+      const response = await axios.post('http://127.0.0.1:8000/api/checkout/', orderData);
+      console.log(response.data);
+      // After saving to backend, redirect to order success page
+      navigate('/ordersucc');
     }
-  };
+  } catch (error) {
+    console.error('Error processing order:', error);
+    // Handle error (e.g., show an error message to the user)
+  }
+};
   
   return (
     <div className="font-sans bg-white p-4">

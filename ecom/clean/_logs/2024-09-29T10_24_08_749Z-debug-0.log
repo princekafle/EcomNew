@@ -7,7 +7,8 @@
 6 silly config load:file:C:\Users\Dell\AppData\Roaming\npm\etc\npmrc
 7 verbose title npm start
 8 verbose argv "start"
-9 verbose logfile logs-max:10 dir:E:\Durshiskhsya\reactn\ecom\clean\_logs\2024-09-20T05_54_29_796Z-
-10 verbose logfile E:\Durshiskhsya\reactn\ecom\clean\_logs\2024-09-20T05_54_29_796Z-debug-0.log
+9 verbose logfile logs-max:10 dir:E:\Durshiskhsya\reactn\ecom\clean\_logs\2024-09-29T10_24_08_749Z-
+10 verbose logfile E:\Durshiskhsya\reactn\ecom\clean\_logs\2024-09-29T10_24_08_749Z-debug-0.log
 11 silly logfile start cleaning logs, removing 2 files
 12 silly logfile done cleaning log files
+13 http fetch GET 200 https://registry.npmjs.org/npm 535ms

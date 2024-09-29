@@ -5,7 +5,7 @@ from . import views
 from django.urls import path
 from .views import ProductList
 from .views import ProductDetailView
-from .views import checkout
+from .views import create_order
 
 
 urlpatterns = [
@@ -14,7 +14,7 @@ urlpatterns = [
 
     path('products/', ProductList.as_view(), name='product-list'),
     path('products/<int:pk>/', ProductDetailView.as_view(), name='product-detail'),
-    path('checkout/', checkout, name='checkout'),
+    path('checkout/', views.create_order, name='checkout'),
 ]
 
 
